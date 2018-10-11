@@ -179,7 +179,7 @@ class BCNNManager(object):
                 self._solver.step()
             train_acc = 100 * num_correct / num_total
             test_acc = self._accuracy(self._test_loader)
-            self._scheduler.step(test_acc)
+            self._scheduler.step(test_acc.item())
             if test_acc > best_acc:
                 best_acc = test_acc
                 best_epoch = t + 1
