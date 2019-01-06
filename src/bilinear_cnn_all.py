@@ -203,7 +203,7 @@ class BCNNManager(object):
             score = self._net(X)
             _, prediction = torch.max(score.data, 1)
             num_total += y.size(0)
-            num_correct += torch.sum(prediction == y.data)
+            num_correct += torch.sum(prediction == y.data).item()
         self._net.train(True)  # Set the model to training phase
         return 100 * num_correct / num_total
 
