@@ -179,7 +179,7 @@ class BCNNManager(object):
                 self._solver.step()
             train_acc = 100 * num_correct / num_total
             test_acc = self._accuracy(self._test_loader)
-            self._scheduler.step(test_acc.item())
+            self._scheduler.step(test_acc)
             if test_acc > best_acc:
                 best_acc = test_acc
                 best_epoch = t + 1
@@ -213,7 +213,7 @@ class BCNNManager(object):
             score = self._net(X)
             _, prediction = torch.max(score.data, 1)
             num_total += y.size(0)
-            num_correct += torch.sum(prediction == y.data)
+            num_correct += torch.sum(prediction == y.data).item()
         self._net.train(True)  # Set the model to training phase
         return 100 * num_correct / num_total
 
