@@ -10,6 +10,10 @@ DESCRIPTIONS
     B-CNN provides richer representations than linear models, and B-CNN achieves
     better performance than part-based fine-grained models with no need for
     further part annotation.
+    
+    Please note that this repo is relative old, which is writen in PyTorch 0.3.0.
+    If you are using newer version of PyTorch (say, >=0.4.0), it is suggested to
+    consider using this repo https://github.com/HaoMood/blinear-cnn-faster instead.
 
 
 REFERENCE
