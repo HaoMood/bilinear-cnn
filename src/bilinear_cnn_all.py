@@ -140,7 +140,7 @@ class BCNNManager(object):
             train_data, batch_size=self._options['batch_size'],
             shuffle=True, num_workers=4, pin_memory=True)
         self._test_loader = torch.utils.data.DataLoader(
-            test_data, batch_size=16,
+            test_data, batch_size=self._options['batch_size'],
             shuffle=False, num_workers=4, pin_memory=True)
 
     def train(self):
@@ -163,7 +163,7 @@ class BCNNManager(object):
                 # Forward pass.
                 score = self._net(X)
                 loss = self._criterion(score, y)
-                epoch_loss.append(loss.data[0])
+                epoch_loss.append(loss.item())
                 # Prediction.
                 _, prediction = torch.max(score.data, 1)
                 num_total += y.size(0)
@@ -194,16 +194,17 @@ class BCNNManager(object):
         self._net.train(False)
         num_correct = 0
         num_total = 0
-        for X, y in data_loader:
-            # Data.
-            X = torch.autograd.Variable(X.cuda())
-            y = torch.autograd.Variable(y.cuda(async=True))
+        with torch.no_grad():
+            for X, y in data_loader:
+                # Data.
+                X = torch.autograd.Variable(X.cuda())
+                y = torch.autograd.Variable(y.cuda(async=True))
 
-            # Prediction.
-            score = self._net(X)
-            _, prediction = torch.max(score.data, 1)
-            num_total += y.size(0)
-            num_correct += torch.sum(prediction == y.data).item()
+                # Prediction.
+                score = self._net(X)
+                _, prediction = torch.max(score.data, 1)
+                num_total += y.size(0)
+                num_correct += torch.sum(prediction == y.data).item()
         self._net.train(True)  # Set the model to training phase
         return 100 * num_correct / num_total
 
